@@ -11,26 +11,32 @@ config_version = "2.0.0"
 startup_delay = 10
 
 # 打卡功能配置
+
 [sign]
 # 需要进行打卡的群聊列表
-groups = []
+groups = [
+    "935350234",
+    "974533432",
+]
 # 打卡检查间隔(秒)
 check_interval = 3600
 # 每日打卡提醒时间
-reminder_time = "09:00"
+reminder_time = "08:00"
 
 # 打卡API配置
+
 [api]
 # 打卡API的主机地址
 host = "127.0.0.1"
 # 打卡API的端口号
-port = "4999"
+port = "9999"
 # API鉴权token，可选
-token = ""
+token = "1FKCwa4jfVJFpXT7"
 # API请求超时时间(秒)
 timeout = 10
 
 # 管理员权限配置
+
 [permissions]
 # 允许管理打卡配置的管理员QQ号列表
 admin_users = []

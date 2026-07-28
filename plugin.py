@@ -201,6 +201,7 @@ class GroupSignPlugin(MaiBotPlugin):
 
     async def on_config_update(self, scope: str, config_data: dict[str, object], version: str) -> None:
         # 定时循环每次迭代从 self.config 重新取值，无需在此处做额外同步
+        pass  # Host 1.1 回调必须有函数体；空实现即可
 
     # ===== Command 组件 =====
 
