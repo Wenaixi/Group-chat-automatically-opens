@@ -179,10 +179,11 @@ class GroupSignPlugin(MaiBotPlugin):
     async def on_load(self) -> None:
         try:
             self.sign_task_manager = None
+            self._boot_task = None
             startup_delay = self.config.plugin.startup_delay
 
             if self.config.plugin.enabled:
-                asyncio.create_task(self._start_task_after_delay())
+                self._boot_task = asyncio.create_task(self._start_task_after_delay())
             else:
                 logger.info("[GroupSign] 插件已禁用，不启动打卡任务")
 
@@ -193,6 +194,14 @@ class GroupSignPlugin(MaiBotPlugin):
 
     async def on_unload(self) -> None:
         try:
+            boot = getattr(self, "_boot_task", None)
+            if boot is not None and not boot.done():
+                boot.cancel()
+                try:
+                    await boot
+                except asyncio.CancelledError:
+                    pass
+            self._boot_task = None
             if self.sign_task_manager:
                 await self.sign_task_manager.stop()
             logger.info("[GroupSign] 插件已卸载")
