@@ -139,7 +139,11 @@ class SignTaskManager:
             self.last_check_date = today
             self.last_checked = False
 
-        if not self.last_checked and now_str >= reminder_time:
+        reminder_hour, reminder_minute = map(int, reminder_time.split(":"))
+        now_minutes = datetime.now().hour * 60 + datetime.now().minute
+        reminder_minutes = reminder_hour * 60 + reminder_minute
+
+        if not self.last_checked and now_minutes >= reminder_minutes:
             logger.info(f"[SignTaskManager] 到达打卡提醒时间 {reminder_time}（当前 {now_str}），开始执行打卡")
             self.last_checked = True
 
@@ -156,16 +160,23 @@ class SignTaskManager:
                 await asyncio.sleep(2)
 
     def _calculate_sleep_time(self, check_interval: int, reminder_time: str) -> int:
-        now = datetime.now()
-        target_time = datetime.strptime(reminder_time, "%H:%M").replace(
-            year=now.year, month=now.month, day=now.day
-        )
+        try:
+            now = datetime.now()
+            target_time = datetime.strptime(reminder_time, "%H:%M").replace(
+                year=now.year, month=now.month, day=now.day
+            )
 
-        if now > target_time:
-            target_time += timedelta(days=1)
+            if now > target_time:
+                target_time += timedelta(days=1)
 
-        time_diff = (target_time - now).total_seconds()
-        return int(min(time_diff, check_interval))
+            time_diff = (target_time - now).total_seconds()
+            return int(min(time_diff, check_interval))
+        except ValueError:
+            logger.error(
+                f"[SignTaskManager] 打卡提醒时间格式无效: {reminder_time}，"
+                f"降级使用检查间隔 {check_interval} 秒"
+            )
+            return check_interval
 
 
 # ===== 插件主类 =====
@@ -404,8 +415,10 @@ class GroupSignPlugin(MaiBotPlugin):
                     await self.ctx.send.text(f"群聊{group_id}不在打卡列表中", stream_id)
                     return
 
-            with open(config_path, "w", encoding="utf-8") as f:
+            tmp_config_path = f"{config_path}.tmp"
+            with open(tmp_config_path, "w", encoding="utf-8") as f:
                 tomlkit.dump(config_data, f)
+            os.replace(tmp_config_path, config_path)
 
         except Exception as e:
             logger.error(f"[Command:groupsign] 更新配置失败: {e}", exc_info=True)
