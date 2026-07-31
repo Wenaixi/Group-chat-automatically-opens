@@ -199,6 +199,14 @@ class GroupSignPlugin(MaiBotPlugin):
                 logger.info("[GroupSign] 插件已禁用，不启动打卡任务")
 
             logger.info("[GroupSign] 插件加载完成")
+            # 再走 ctx.logger：stdlib logger 名 group_sign 可能进不了 host 汇总日志
+            try:
+                self.ctx.logger.info(
+                    f"群聊定时打卡插件已加载 enabled={self.config.plugin.enabled} "
+                    f"groups={len(self.config.sign.groups)} api={self.config.api.host}:{self.config.api.port}"
+                )
+            except Exception:
+                pass
         except Exception as e:
             logger.error("[GroupSign] 插件初始化失败", exc_info=True)
             raise
