@@ -31,3 +31,6 @@ env/
 !data/
 !cookies-*.json
 
+
+# OMC CLI
+.omc/
