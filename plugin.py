@@ -205,8 +205,8 @@ class GroupSignPlugin(MaiBotPlugin):
                     f"群聊定时打卡插件已加载 enabled={self.config.plugin.enabled} "
                     f"groups={len(self.config.sign.groups)} api={self.config.api.host}:{self.config.api.port}"
                 )
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.debug("[GroupSign] ctx.logger.info 调用失败（可能是 on_load 早期 ctx 未完全初始化）: %s", exc)
         except Exception as e:
             logger.error("[GroupSign] 插件初始化失败", exc_info=True)
             raise
