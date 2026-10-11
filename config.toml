@@ -31,7 +31,7 @@ host = "127.0.0.1"
 # 打卡API的端口号
 port = "9999"
 # API鉴权token，可选
-token = "1FKCwa4jfVJFpXT7"
+token = "YOUR_NAPCAT_TOKEN_HERE"
 # API请求超时时间(秒)
 timeout = 10
 
