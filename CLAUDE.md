@@ -1,5 +1,13 @@
 # 群聊自动打卡（deepseek-v4-pro_Group-chat-automatically-opens）
 
+## 官方上游与版本溯源
+- 官方仓库（Upstream Repository）：https://github.com/DeepSeek-V4-Pro/Group-chat-automatically-opens
+- 官方作者（Author / Maintainer）：DeepSeek-V4-Pro
+- 功能定位：群聊定时打卡与自动签到插件
+- 本地演进定位：基于官方上游最新版本，融入本地生产环境兼容性定制与稳定性加固。
+- 本地专属定制：本地修复打卡时间分钟数比较兼容性与配置原子写机制。
+
+
 源: 社区插件
 
 ## 主人改过的关键文件
